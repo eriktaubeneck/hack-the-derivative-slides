@@ -1,0 +1,262 @@
+
+\documentclass[10pt]{beamer}
+%\documentclass[10pt,handout]{beamer}
+%\documentclass{beamer}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{latexsym}
+\usepackage{epsfig}
+\usepackage{graphics}
+
+
+\mode<presentation>
+{
+\usetheme{Warsaw}
+%\setbeamercovered{dynamic}
+\setbeamercolor{palette primary}{bg=blue}
+\setbeamercolor{block title}{bg=blue}
+\setbeamercolor{lowercol}{bg=green}
+}
+\setbeamertemplate{navigation symbols}{} 
+
+\pgfdeclareimage[height=.9cm]{AULogo2}{SampTA2011Figs/AULogo2} \logo{\pgfuseimage{AULogo2}}
+
+%==========================(Casey's LaTeX Shortcuts)================================
+%===================================================================================
+
+% SYMBOLS %
+% ---------------------- Blackboard Bold --------------------------------
+\def\R{\mathbb{R}}                     % real numbers R
+\def\C{\mathbb{C}}                     % complex numbers C
+\def\N{\mathbb{N}}                     % natural numbers
+\def\Z{\mathbb{Z}}                     % integers
+\def\Q{\mathbb{Q}}                     % rational numbers
+\def\P{\mathbb{P}}                     % primes
+\def\W{\mathbb{W}}                     % windowing functions
+\def\B{\mathbb{B}}                     % partition of unity functions
+\def\A{\mathbb{A}}                     % almost orthogonal windowing functions
+\def\T{\mathbb{T}}                     % unit circle (\R mod 2 \pi)
+\def\F{\mathbb{F}}                     % Functions
+\def\I{\mathbb{I}}                     % Intervals
+\def\D{\mathbb{D}}                     % The unit disk
+\def\Rn{{\R}^{n}}                      % n-dimensional R space
+\def\Cn{{\C}^{n}}                      % n-dimensional C space
+\def\Rhat{{\widehat{\R}}}              % reals (dual)
+\def\Rnhat{{\widehat{\Rn}}}            % n-dim reals (dual)
+\def\PW{\mathbb{PW}}                   % Paley-Wiener Space
+ 
+% WORD FUNCTIONS %
+\def\sinc{\mathop{\textstyle{\rm sinc}}}
+\def\domain{\mathop{\textstyle{\rm Domain}}\nolimits}
+\def\essinf{\mathop{\textstyle{\rm ess \, inf}}}
+\def\esssup{\mathop{\textstyle{\rm ess \, sup}}}
+\def\range{\mathop{\textstyle{\rm Range}}\nolimits}
+\def\Span{\mathop{\textstyle{\rm span}}\nolimits}
+\def\supp{\mathop{\textstyle{\rm supp}}\nolimits}
+\def\CHI{\hbox{\raise .5ex \hbox{$\chi$}}}
+\def\Tri{\mbox{Tri}}
+\def\Trap{\mbox{Trap}}
+\def\Cap{\mbox{Cap}}
+\def\loc{{\textstyle{\rm loc}}}
+\def\qed{ \hspace*{\fill} \Box}
+
+% UNARY, BINARY OPERATORS %
+\def\norm#1{\|  #1 \|}
+\def\abs#1{| #1 |}
+\def\bigabs#1{\biggl| #1 \biggr|}
+\def\set#1{\{ #1 \}}
+\def\bigset#1{\biggl\{ #1 \biggr\}}
+\def\ceiling#1{\lceil #1 \rceil}
+\def\floor#1{\lfloor #1 \rfloor}
+\def\ip#1#2{\langle #1 , #2 \rangle}
+\def\bigip#1#2{\bigl\langle #1, \, #2 \bigr\rangle}
+\def\Bigip#1#2{\Bigl\langle #1, \; #2 \Bigr\rangle}
+\def\biggip#1#2{\biggl\langle #1, \; #2 \biggr\rangle}
+\def\ipsize#1#2{\left\langle #1 , #2 \right\rangle}
+\def\Int#1{\lfloor #1 \rfloor}
+\def\biggInt#1{\biggl\lfloor #1 \biggr\rfloor}
+\def\Intsize#1{\left\lfloor #1 \right\rfloor}
+\def\paren#1{( #1 )}
+\def\bigparen#1{\left( #1 \right)}
+\def\Bigparen#1{\Bigl( #1 \Bigr)}
+\def\biggparen#1{\biggl( #1 \biggr)}
+\def\Biggparen#1{\Biggl( #1 \Biggr)}
+\def\sqparen#1{[ #1 ]}
+\def\bigsqparen#1{\biggl[ #1 \biggr]}
+
+\newcommand{\hl}[1]{{\bf #1}}
+\newcommand{\refp}[1]{(\ref{#1})}
+
+\def\comment#1{}
+
+%==========================(End of my LaTeX Commands)===============================
+%
+
+%\begin{document}
+
+\title{
+{\bf{\textsf{Math Hacks 2}}}}
+\author[Erik Taubeneck]{Erik Taubeneck}
+
+\institute[Hacker School - Summer 2013] 
+{
+{\tt erik.taubeneck@gmail.com}
+}
+
+\date{August 8th, 2013}
+ 
+\begin{document}
+
+% Creates title page of slide show using above information
+\begin{frame}
+  \titlepage
+\end{frame}
+\note{Talk for 5 minutes} % Add notes to yourself that will be displayed when
+                           % typeset with the notes or notesonly class options
+
+%\section[Outline]{}
+
+% Creates table of contents slide incorporating
+% all \section and \subsection commands
+
+\begin{frame}
+\frametitle{A Crash Course in Complex Analysis}
+
+\begin{itemize}[<+->]
+  \item Def: $i$ = $\sqrt{-1}$.
+  \item Why do we need $i$???
+  \item Solve $x^2 + 1 = 0$
+  \item Def: $\C = \{x + iy \ \forall \ x,y \ \in \R^2 \}$
+  \item Fun fact! All polynomials of degree $n$ have $n$ zeros in $\C$.
+\end{itemize}
+
+
+\end{frame}
+
+\begin{frame}
+\frametitle{A Crash Course in Complex Analysis (cont.)}
+
+$\mathbb{E}^x$:
+\[ f(z) = z^2 \]
+\pause \uncover{
+  Let $z=x+iy$. Then
+
+  \[ f(z) = f(x+iy) = (x+iy)^2 = x^2 +2ixy + i^2y^2 = \]
+  \[ x^2+ 2ixy - y^2 \]
+}
+
+\pause \uncover{
+  We can always write $f(x+iy) = u(x,y) + iv(x,y)$. Note that
+
+  \[ u(x,y) = \mathfrak{R}(f(x+iy)) \ \mathrm{and} \ v(x,y) = \mathfrak{I}(f(x+iy)) \]
+}
+\pause \uncover{
+  In our example
+
+  \[ u(x,y) = x^2 - y^2 \ \mathrm{and} \ v(x,y) = 2xy \]
+
+}
+\end{frame}
+
+\begin{frame}
+\frametitle{A Crash Course in Complex Analysis (cont.)}
+
+\[ u(x,y) = x^2 - y^2 \ \mathrm{and} \ v(x,y) = 2xy \]
+
+We can now take 4 different derivatives.
+
+\begin{eqnarray*}
+\frac{\partial u}{\partial x} = 2x && \frac{\partial v}{\partial x} = 2y \\
+\frac{\partial u}{\partial y} = -2y && \frac{\partial v}{\partial y} = 2x
+\end{eqnarray*}
+
+\pause \uncover{
+  Note that:
+  \begin{eqnarray*}
+  \frac{\partial u}{\partial x} = \frac{\partial v}{\partial y} &&
+  \frac{\partial u}{\partial y} = -\frac{\partial v}{\partial x}
+  \end{eqnarray*}
+  These are the Cauchy-Riemann equations and hold for all analytic functions on $\C$!
+}
+\end{frame}
+
+\begin{frame}
+\frametitle{Time for the Hack!}
+
+Suppose we have a function $f:\R \to \R$ that we wish to find the derivative for a $x_0$.
+
+\pause \uncover{
+  One approximation is to use the finite difference method. Recall that $\frac{df}{dx}$ is defined as
+
+  \[ \lim_{h \to 0} \frac{f(x+h)-f(x)}{h} \]
+
+  So, we estimate
+
+  \[ f'(x_o) \approx \frac{f(x_0+h)-f(x_0)}{h} \]
+
+  for some small $h$.
+
+}
+\pause \uncover{
+  So, what's wrong with that? Well for small differences, $\mathbf{Float64} - \mathbf{Float64}$ can have issues.
+}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Time for the Hack! (cont.)}
+
+  We have $f:\R \to \R$. Rewrite
+
+  \[ f(z) = f(x+iy) = u(x,y) + iv(x,y) \]
+\pause \uncover{
+  Now, for all $\bar{z} \in \R$, we have $y = 0$, and so
+
+  \[ f(\bar{z}) = f(x,0) = u(x,0) + iv(x,0) \]
+}
+\pause \uncover{
+  Since $f: \R \to \R$, $f(\bar{z}) \in \R$ for all $\bar{z} \in \R$. Therefore
+
+  \[ v(x,0) = 0 \]
+
+  and
+
+  \[ f(x,0) = u(x,0) \]
+}
+\pause \uncover{
+  We want to estimate $\frac{df}{\partial x}$. Since for all $z \in \R$, $f = u$,
+
+  \[ \frac{df}{\partial x} = \frac{\partial u}{\partial x} = \frac{\partial v}{\partial y} \]
+
+}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Time for the Hack! (cont.)}
+
+  Again, using the definition of the derivative
+
+  \[ \frac{\partial v}{\partial y} = \lim_{h \to 0} \frac{v(x,y+h) - v(x,y)}{h} \]
+
+\pause \uncover{
+
+  Since $y = 0$ for all $\bar{z} \in \R$,
+
+  \[ \frac{\partial v}{\partial y} = \lim_{h \to 0} \frac{v(x,h) - v(x,0)}{h} \]
+}
+\pause \uncover{
+  
+  Recall that $v(x,0) = 0$, so
+
+  \[ \frac{\partial v}{\partial y} = \lim_{h \to 0} \frac{v(x,h)}{h} \]
+}
+\pause \uncover{
+  Now, to estimate $\frac{df}{\partial x} = \frac{\partial v}{\partial y}$, for a very small $h$
+
+  \[ \frac{df}{\partial x} \approx \frac{v(x,h)}{h} = \frac{\mathfrak{Im}(f(x+ih))}{h} \]
+}
+
+\end{frame} 
+\end{document}
