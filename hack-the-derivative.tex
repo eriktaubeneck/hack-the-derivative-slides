@@ -5,6 +5,12 @@
 \usepackage{graphicx}
 \usepackage{listings}
 
+
+\lstset{basicstyle=\small\ttfamily,
+  numbers=left,
+  escapeinside=||
+}
+
 \usepackage{color}
 
 \definecolor{dkgreen}{rgb}{0,0.6,0}
@@ -108,7 +114,7 @@
 \institute{
   GameChanger Media - Software Engineer and Data Maven
 
-  {\tt erik.taubeneck@gmail.com}
+  We're hiring! \url{https://gc.com/about/careers}
 }
 
 \date{July 25th, 2015}
@@ -129,6 +135,24 @@
 \tableofcontents
 \end{frame}
 
+\begin{frame}[fragile]
+
+  \frametitle{Try It Yourself}
+
+  The functions used through out this presentations can be installed with pip!
+
+  \begin{lstlisting}
+      $ mkdir somewhere_new
+      $ cd somewhere_new
+      $ virtualenv venv
+      $ source venv/bin/activate
+      $ pip install hackthederivative
+      $ python
+      >>> from hackthederivative import *
+  \end{lstlisting}
+
+\end{frame}
+
 
 \section{Calculus Crash Course}
 
@@ -136,14 +160,16 @@
 
   \frametitle{Taking the Derivative}
 
-  Let $f(x)$ be a function from $\R \to \R$.
+  Let $f(x)$ be a function from $\R \to X \subseteq \R$.
 
   e.g.
   \begin{itemize}
     \item $f(x) = x^2$
-    \item $f(x) = sin(x)$
-    \item $f(x) = 5x^3 - 6x + \frac{1}{x}$
+    \item $g(x) = sin(x)$
+    \item $h(x) = 5x^3 - 6x + \frac{1}{x}$ \footnote{Note that $h(x)$ is not defined at $x=0$.}
   \end{itemize}
+
+
 
 \end{frame}
 
@@ -173,13 +199,13 @@
 
   $\mathbb{E}^x$:
 
-  Let $f(x) = x^2$. Then
+  Let $f(x) = x^2$. \pause Then
 
   \begin{eqnarray*}
-    f'(x) &&  = \lim_{h \to 0} \frac{(x+h)^2 - x^2}{h} \\
-    && = \lim_{h \to 0} \frac{x^2 + 2xh + h^2 - x^2}{h} \\
-    && = \lim_{h \to 0} \frac{2xh + h^2}{h} \\
-    && = \lim_{h \to 0} 2x + h \\
+    f'(x) &&  = \lim_{h \to 0} \frac{(x+h)^2 - x^2}{h} \\ \pause
+    && = \lim_{h \to 0} \frac{x^2 + 2xh + h^2 - x^2}{h} \\ \pause
+    && = \lim_{h \to 0} \frac{2xh + h^2}{h} \\ \pause
+    && = \lim_{h \to 0} 2x + h \\ \pause
     && = 2x \\
   \end{eqnarray*}
 
@@ -194,58 +220,61 @@
 
 Suppose we wish to find the derivative for some function $f(x)$ a $x_0$.
 
-\pause \uncover{
-  One approximation is the finite difference method. Recall that $f'(x)$ is defined as
+\pause
+One approximation is the finite difference method.
 
-  \[ \lim_{h \to 0} \frac{f(x+h)-f(x)}{h} \]
+\pause
+Recall
 
-  So, we estimate
+\[ f'(x) = \lim_{h \to 0} \frac{f(x+h)-f(x)}{h} \]
 
-  \[ f'(x_o) \approx \frac{f(x_0+h)-f(x_0)}{h} \]
+\pause
+We can estimate
 
-  for some small $h$.
+\[ f'(x_o) \approx \frac{f(x_0+h)-f(x_0)}{h} \]
 
-}
-
-\end{frame}
-
-\begin{frame}[fragile]
-\frametitle{Finite Difference}
-
-Implemented in Python
+for some small $h$.
 
 
-\begin{lstlisting}
-  def finite_difference(f, x, h):
-      return (f(x+h) - f(x))/h
-\end{lstlisting}
-
-\begin{lstlisting}
-  In [1]: def x_squared(x):
-              return x**2
-
-  In [2]: print finite_difference(x_squared, 1.0, 0.00001)
-
-  Out [2]: 2.00001000001393
-\end{lstlisting}
 
 \end{frame}
 
 \begin{frame}[fragile]
 \frametitle{Finite Difference}
 
-But how do we choose $h$? Probably as small as possible.
+Implemented in Pythonp
+
 
 \begin{lstlisting}
-  In [1]: import sys
+  In [1]: def finite_difference(f, x, h):
+              return (f(x+h) - f(x))/h
+  |\pause|
+  In [2]: f = lambda x: x**2
 
-  In [2]: def x_squared(x):
-              return x**2
+  In [2]: finite_difference(f, 1.0, 0.00001)
 
-  In [3]: print finite_difference(x_squared, 1.0, sys.float_info.min)
-
-  Out [3]: 0.0
+  Out [3]: 2.00001000001393
 \end{lstlisting}
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Finite Difference}
+
+But how do we choose $h$? \pause
+
+The limit as $h \to 0$ approaches the derivative, so the smaller the better!
+
+\begin{lstlisting}
+  In [4]: import sys
+
+  In [5]: h = sys.float_info.min
+  |\pause|
+  In [6]: print finite_difference(f, 1.0, h)
+
+  Out [6]: 0.0
+\end{lstlisting}
+
 
 Uh oh.
 
@@ -254,21 +283,21 @@ Uh oh.
 \begin{frame}[fragile]
 \frametitle{Finite Difference}
 
-Hmm, $0.00001$ seems pretty small, maybe that will just work.
+Hmm, $0.00001$ seems pretty small, and worked well earlier.
 
-But what if we look at big $x$ like $x_0 = 1.0e20$
+Maybe that will just work.
+
+\pause
 
 \begin{lstlisting}
+  In [7]: finite_difference(f, 1.0e20, 0.00001)
 
-  In [1]: def x_squared(x):
-              return x**2
-
-  In [2]: print finite_difference(x_squared, 1.0e20, 0.00001)
-
-  Out [2]: 0.0
+  Out [7]: 0.0
 \end{lstlisting}
 
-Still no good.
+Nope, that can break too.
+
+To figure out why, let's look closer at Floating Point numbers.
 
 \end{frame}
 
@@ -299,7 +328,9 @@ or (possibly more readable)
 
 This means that the floating point numbers have gaps!
 
-\includegraphics[scale=.4]{float-gaps.jpg}
+\begin{center}
+\includegraphics[scale=.6]{float-gaps.jpg}
+\end{center}
 
 \end{frame}
 
@@ -313,14 +344,16 @@ This means that the floating point numbers have gaps!
   In [2]: plus_epsilon_identity(x, eps):
               return x + eps == x
 
-  In [3]: print plus_epsilon_identity(0.0, sys.float_info.min)
-  Out [3]: False
+  In [3]: eps = sys.float_info.min
+  |\pause|
+  In [4]: plus_epsilon_identity(0.0, eps)
+  Out [4]: False
 
-  In [4]: print plus_epsilon_identity(0.1, sys.float_info.min)
-  Out [4]: True
-
-  In [5]: print plus_epsilon_identity(1.0, sys.float_info.min)
+  In [5]: plus_epsilon_identity(1.0, eps)
   Out [5]: True
+  |\pause|
+  In [6]: plus_epsilon_identity(1.0e20, 1.0)
+  Out [6]: True
 
 \end{lstlisting}
 
@@ -329,7 +362,12 @@ This means that the floating point numbers have gaps!
 \begin{frame}
 \frametitle{Problems with the Derivative}
 
-If we choose $h$ that is so small such that $x + h = x$ (in floating point arithmetic), then
+If we choose $h$ that is so small such that
+
+\[ float(x) + float(h) = float(x) \]
+\pause
+
+then
 
 \[ \frac{f(x+h) - f(x)}{h} = \frac{f(x) - f(x)}{h} = \frac{0}{h} = 0 \]
 
@@ -342,70 +380,98 @@ If we choose $h$ that is so small such that $x + h = x$ (in floating point arith
 \begin{lstlisting}
 
   In [1]: def eps(x):
-              machine_eps = float(max(1, x))
-              while float(max(1, x)) + machine_eps != float(max(1, x)):
-                  last = machine_eps
-                  machine_eps = machine_eps / 2.
+              e = float(max(sys.float_info.min, abs(x)))
+              while not plus_epsilon_identity(x, e):
+                  last = e
+                  e = e / 2.
               return last
+  |\pause|
+  In [2]: eps(1.0)
+  Out[2]: 2.220446049250313e-16
 
+  In [3]: eps(1.0e10)
+  Out[3]: 1.1102230246251565e-06
+  |\pause|
+  In [4]: eps(1.0e20)
+  Out[4]: 11102.230246251565
 \end{lstlisting}
 
 \end{frame}
 
+\begin{frame}[fragile]
+\frametitle{Choosing Epsilon}
+
+From \href{http://www.karenkopecky.net/Teaching/eco613614/Notes_NumericalDifferentiation.pdf}{lecture notes posted by Karen Kopecky} \footnote{\url{http://www.karenkopecky.net/Teaching/eco613614/Notes_NumericalDifferentiation.pdf}}, we see we should use
+
+\[ h = \sqrt{u} * max(\abs{x}, 1) \]
+
+where $u = eps(1)$.
+\pause
+\begin{lstlisting}
+
+  In [1]: def finite_difference(f, x, h=None):
+              if not h:
+                  h = sqrt(eps(1.0)) * max(abs(x), 1.0)
+              return (f(x+h) - f(x))/h
+
+\end{lstlisting}
+
+\end{frame}
 
 \begin{frame}[fragile]
 \frametitle{Testing It Out}
 
 \begin{lstlisting}
 
-  In [1]: def finite_difference(f, x):
-              return (f(x+eps(x)) - f(x))/eps(x)
-
   In [2]: def error(f, df, x):
               return abs(finite_difference(f, x) - df(x))
 
-  In [3]: def error_percent(f, df, x):
-              return error(f, df, x) / x
-
+  In [3]: def error_rate(f, df, x):
+              return error(f, df, x) / df(x)
+  |\pause|
   In [4]: f, df = lambda x:x**2, lambda x:2*x
-  In [5]: error_percent(f, df, 1.0)
-  Out[5]: 0.0
-  In [6]: error_percent(f, df, 1.0e5)
-  Out[6]: 1.4359738368000003
-  In [7]: error_percent(f, df, 1.0e20)
-  Out[7]: 0.17780714829400604
+  |\pause|
+  In [5]: error_rate(f, df, 1.0)
+  Out[5]: 7.450580596923828e-09
+  |\pause|
+  In [6]: error_rate(f, df, 1.0e5)
+  Out[6]: 9.045761108398438e-09
+  |\pause|
+  In [7]: error_rate(f, df, 1.0e20)
+  Out[7]: 4.5369065472e-09
 \end{lstlisting}
 
 \end{frame}
 
 \begin{frame}[fragile]
-\frametitle{Testing It Out (cont.)}
+\frametitle{Testing It Out}
 
 \begin{lstlisting}
 
   In [8]: import math
 
   In [9]: f, df = math.sin, math.cos
-
-  In [10]: error_percent(f, df, 1.0)
-  Out[10]: 0.040302305868139765
-
-  In [11]: error_percent(f, df, 1.0e5)
-  Out[11]: 3.1052106756178765e-06
-
-  In [12]: error_percent(f, df, 1.0e20)
-  Out[12]: 7.639026624108353e-21
-
+  |\pause|
+  In [10]: error_rate(f, df, 1.0)
+  Out[10]: 1.2780011808656197e-08
+  |\pause|
+  In [11]: error_rate(f, df, 1.0e10)
+  Out[11]: 1.002014830004253
+  |\pause|
+  In [12]: error_rate(f, df, 1.0e20)
+  Out[12]: 0.9999999999998509
 \end{lstlisting}
 
 \end{frame}
 
 \begin{frame}
 \frametitle{We Can Do Better!}
+\pause
+\begin{center}
+  \includegraphics[scale=0.5]{use-math.png}
+\end{center}
 
-But we are going to have to use math...
 \end{frame}
-
 
 \section{Complex Analysis Crash Course}
 
@@ -424,7 +490,7 @@ But we are going to have to use math...
 \end{frame}
 
 \begin{frame}
-\frametitle{A Crash Course in Complex Analysis (cont.)}
+\frametitle{A Crash Course in Complex Analysis}
 
 $\mathbb{E}^x$:
 \[ f(z) = z^2 \]
@@ -449,7 +515,7 @@ $\mathbb{E}^x$:
 \end{frame}
 
 \begin{frame}
-\frametitle{A Crash Course in Complex Analysis (cont.)}
+\frametitle{A Crash Course in Complex Analysis}
 
 \[ u(x,y) = x^2 - y^2 \ \mathrm{and} \ v(x,y) = 2xy \]
 
@@ -466,15 +532,27 @@ We can now take 4 different derivatives.
   \frac{\partial u}{\partial x} = \frac{\partial v}{\partial y} &&
   \frac{\partial u}{\partial y} = -\frac{\partial v}{\partial x}
   \end{eqnarray*}
-  These are the Cauchy-Riemann equations and hold for all analytic functions on $\C$!
 }
 \end{frame}
 
+\begin{frame}
+\frametitle{Cauchy-Riemann Equations}
+  These are the Cauchy-Riemann equations and hold for all analytic functions on $\C$! \footnote{See your favorite Complex Analysis textbook for a proof.}
+  \begin{eqnarray*}
+  \frac{\partial u}{\partial x} = \frac{\partial v}{\partial y} &&
+  \frac{\partial u}{\partial y} = -\frac{\partial v}{\partial x}
+  \end{eqnarray*}
+
+
+
+\end{frame}
+
+
 \section{Hack the Derivative}
 \begin{frame}
-\frametitle{Time for the Hack! (cont.)}
+\frametitle{Time for the Hack!}
 
-  We have $f:\R \to \R$. Rewrite
+  We have $f:\R \to X \subseteq \R$. Rewrite
 
   \[ f(z) = f(x+iy) = u(x,y) + iv(x,y) \]
 \pause \uncover{
@@ -483,11 +561,12 @@ We can now take 4 different derivatives.
   \[ f(\bar{z}) = f(x,0) = u(x,0) + iv(x,0) \]
 }
 \pause \uncover{
-  Since $f: \R \to \R$, $f(\bar{z}) \in \R$ for all $\bar{z} \in \R$. Therefore
+  Since $f: \R \to X \subseteq \R$, $f(\bar{z}) \in \R$ for all $\bar{z} \in \R$. Therefore
 
   \[ v(x,0) = 0 \]
-
-  and
+}
+\pause \uncover{
+  and so
 
   \[ f(x,0) = u(x,0) \]
 }
@@ -501,7 +580,7 @@ We can now take 4 different derivatives.
 \end{frame}
 
 \begin{frame}
-\frametitle{Time for the Hack! (cont.)}
+\frametitle{Time for the Hack!}
 
   Again, using the definition of the derivative
 
@@ -538,7 +617,7 @@ Implemented in Python
 
   In [2]: def complex_step_finite_diff(f, x):
               h = sys.float_info.min
-              return (f(x+h*1.j)).imag / h
+              return (f(x+h*1.0j)).imag / h
 \end{lstlisting}
 \end{frame}
 
@@ -549,14 +628,16 @@ Implemented in Python
 
 
 \begin{lstlisting}
-  In [3]: complex_step_finite_diff(f, 1.0)
-  Out[3]: 2.0
-
-  In [4]: complex_step_finite_diff(f, 1.0e5)
-  Out[4]: 200000.0
-
-  In [4]: complex_step_finite_diff(f, 1.0e20)
-  Out[4]: 2e+20
+  In [3]: f, df = lambda x:x**2, lambda x:2*x
+  |\pause|
+  In [4]: complex_step_finite_diff(f, 1.0)
+  Out[4]: 2.0
+  |\pause|
+  In [5]: complex_step_finite_diff(f, 1.0e10)
+  Out[5]: 20000000000.0
+  |\pause|
+  In [6]: complex_step_finite_diff(f, 1.0e20)
+  Out[6]: 2e+20
 
 
 \end{lstlisting}
@@ -567,19 +648,18 @@ Implemented in Python
 
 \begin{lstlisting}
 
-  In [2]: def cerror(f, df, x):
+  In [7]: def cerror(f, df, x):
               return abs(complex_step_finite_diff(f, x) - df(x))
 
-  In [3]: def cerror_percent(f, df, x):
+  In [8]: def cerror_rate(f, df, x):
               return cerror(f, df, x) / x
-
-  In [4]: f, df = lambda x:x**2, lambda x:2*x
-  In [5]: cerror_percent(f, df, 1.0)
-  Out[5]: 0.0
-  In [6]: cerror_percent(f, df, 1.0e5)
-  Out[6]: 0.0
-  In [7]: cerror_percent(f, df, 1.0e20)
-  Out[7]: 0.0
+  |\pause|
+  In [9]: cerror_rate(f, df, 1.0)
+  Out[9]: 0.0   |\pause|
+  In [10]: cerror_rate(f, df, 1.0e10)
+  Out[10]: 0.0   |\pause|
+  In [11]: cerror_rate(f, df, 1.0e20)
+  Out[11]: 0.0   |\pause|
 \end{lstlisting}
 
 \end{frame}
@@ -589,34 +669,68 @@ Implemented in Python
 
 \begin{lstlisting}
 
-  In [8]: import cmath
+  In [11]: import cmath
 
-  In [9]: f, df = cmath.sin, cmath.cos
-
-  In [10]: cerror_percent(f, df, 1.0)
-  Out[10]: 0.0
-
-  In [11]: cerror_percent(f, df, 1.0e5)
-  Out[11]: 1.1102230246251566e-21
-
-  In [12]: cerror_percent(f, df, 1.0e20)
-  Out[12]: 0.0\end{lstlisting}
+  In [11]: f, df = cmath.sin, cmath.cos
+  |\pause|
+  In [12]: cerror_rate(f, df, 1.0)
+  Out[12]: 0.0
+  |\pause|
+  In [13]: cerror_rate(f, df, 1.0e10)
+  Out[13]: 0.0
+  |\pause|
+  In [14]: cerror_rate(f, df, 1.0e20)
+  Out[14]: 0.0
+\end{lstlisting}
 
 \end{frame}
+
+\begin{frame}[fragile]
+\frametitle{It's Not Perfect, But It's Pretty Good}
+
+\begin{lstlisting}
+
+  In [15]: cerror_rate(f, df, 1.0e5)
+  Out[15]: .110933124815182e-16
+  |\pause|
+  In [16]: f = lambda x: cmath.exp(x) / cmath.sqrt(x)
+  In [17]: df = lambda x: (cmath.exp(x)* (2*x - 1))/(2*x**(1.5))
+  |\pause|
+  In [18]: cerror_rate(f, df, 1.0)
+  Out[18]: 0.0   |\pause|
+  In [19]: cerror_rate(f, df, 1.0e2)
+  Out[19]: 1.1570932160552342e-16   |\pause|
+  In [20]: cerror_rate(f, df, 5.67)
+  Out[20]: 1.2795419601231268e-16   |\pause|
+  In [21]: cerror_rate(f, df, 1.0e3)
+  Out [21]: OverflowError: math range error
+
+\end{lstlisting}
+
+\end{frame}
+
 
 \begin{frame}
 \frametitle{Limits}
 
-Must satisty Cauchy Riemann equations, so does not work for abs or a function with $<$ or $>$ in it.
-
-Only works for functions from $\R \to \R$.
-
+  \begin{itemize}
+    \item Must satisfy Cauchy Riemann equations, so does not work for abs or a function with $<$ or $>$ in it.
+    \item Only works for functions from $\R \to X \subseteq \R$.
+  \end{itemize}
 
 \end{frame}
 
 \begin{frame}
 
 \frametitle{Thanks!}
+
+\begin{itemize}
+  \item Follow me on twitter: \href{https://twitter.com/taubeneck}{@taubeneck}
+  \item Fork me on Github: \href{https://github.com/eriktaubeneck}{eriktaubeneck}
+  \item Blog: \url{http://skien.cc/}
+  \item Slides: \url{http://slides.skien.cc/hack-the-derivative-pydata}
+  \item Other Presentations: \url{http://slides.skienc.cc}
+\end{itemize}
 
 \end{frame}
 
