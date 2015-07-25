@@ -1,0 +1,5 @@
+# pdflatex-trick.yml
+tricks:
+  - watchdog.tricks.ShellCommandTrick:
+      patterns: ['*.tex']
+      shell_command: 'pdflatex -halt-on-error *.tex'
