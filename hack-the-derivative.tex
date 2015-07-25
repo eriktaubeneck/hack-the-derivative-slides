@@ -242,8 +242,7 @@ for some small $h$.
 \begin{frame}[fragile]
 \frametitle{Finite Difference}
 
-Implemented in Pythonp
-
+Implemented in Python
 
 \begin{lstlisting}
   In [1]: def finite_difference(f, x, h):
@@ -494,24 +493,20 @@ where $u = eps(1)$.
 
 $\mathbb{E}^x$:
 \[ f(z) = z^2 \]
-\pause \uncover{
-  Let $z=x+iy$. Then
+\pause
+Let $z=x+iy$. Then
+\[ f(z) = f(x+iy) = (x+iy)^2 = x^2 +2ixy + i^2y^2 = \]
+\[ x^2+ 2ixy - y^2 \]
 
-  \[ f(z) = f(x+iy) = (x+iy)^2 = x^2 +2ixy + i^2y^2 = \]
-  \[ x^2+ 2ixy - y^2 \]
-}
+\pause
+We can always write $f(x+iy) = u(x,y) + iv(x,y)$. Note that
 
-\pause \uncover{
-  We can always write $f(x+iy) = u(x,y) + iv(x,y)$. Note that
+\[ u(x,y) = \mathfrak{R}(f(x+iy)) \ \mathrm{and} \ v(x,y) = \mathfrak{I}(f(x+iy)) \]
 
-  \[ u(x,y) = \mathfrak{R}(f(x+iy)) \ \mathrm{and} \ v(x,y) = \mathfrak{I}(f(x+iy)) \]
-}
-\pause \uncover{
-  In our example
+\pause
+In our example
+\[ u(x,y) = x^2 - y^2 \ \mathrm{and} \ v(x,y) = 2xy \]
 
-  \[ u(x,y) = x^2 - y^2 \ \mathrm{and} \ v(x,y) = 2xy \]
-
-}
 \end{frame}
 
 \begin{frame}
@@ -526,13 +521,13 @@ We can now take 4 different derivatives.
 \frac{\partial u}{\partial y} = -2y && \frac{\partial v}{\partial y} = 2x
 \end{eqnarray*}
 
-\pause \uncover{
+\pause
   Note that:
   \begin{eqnarray*}
   \frac{\partial u}{\partial x} = \frac{\partial v}{\partial y} &&
   \frac{\partial u}{\partial y} = -\frac{\partial v}{\partial x}
   \end{eqnarray*}
-}
+
 \end{frame}
 
 \begin{frame}
@@ -553,29 +548,19 @@ We can now take 4 different derivatives.
 \frametitle{Time for the Hack!}
 
   We have $f:\R \to X \subseteq \R$. Rewrite
-
   \[ f(z) = f(x+iy) = u(x,y) + iv(x,y) \]
-\pause \uncover{
+  \pause
   Now, for all $\bar{z} \in \R$, we have $y = 0$, and so
-
   \[ f(\bar{z}) = f(x,0) = u(x,0) + iv(x,0) \]
-}
-\pause \uncover{
+  \pause
   Since $f: \R \to X \subseteq \R$, $f(\bar{z}) \in \R$ for all $\bar{z} \in \R$. Therefore
-
   \[ v(x,0) = 0 \]
-}
-\pause \uncover{
+  \pause
   and so
-
   \[ f(x,0) = u(x,0) \]
-}
-\pause \uncover{
+  \pause
   We want to estimate $\frac{df}{\partial x}$. Since for all $z \in \R$, $f = u$,
-
   \[ \frac{df}{\partial x} = \frac{\partial u}{\partial x} = \frac{\partial v}{\partial y} \]
-
-}
 
 \end{frame}
 
@@ -583,26 +568,17 @@ We can now take 4 different derivatives.
 \frametitle{Time for the Hack!}
 
   Again, using the definition of the derivative
-
   \[ \frac{\partial v}{\partial y} = \lim_{h \to 0} \frac{v(x,y+h) - v(x,y)}{h} \]
-
-\pause \uncover{
-
+  \pause
   Since $y = 0$ for all $\bar{z} \in \R$,
-
   \[ \frac{\partial v}{\partial y} = \lim_{h \to 0} \frac{v(x,h) - v(x,0)}{h} \]
-}
-\pause \uncover{
-
+  \pause
   Recall that $v(x,0) = 0$, so
-
   \[ \frac{\partial v}{\partial y} = \lim_{h \to 0} \frac{v(x,h)}{h} \]
-}
-\pause \uncover{
+  \pause
   Now, to estimate $\frac{df}{\partial x} = \frac{\partial v}{\partial y}$, for a very small $h$
-
   \[ \frac{df}{\partial x} \approx \frac{v(x,h)}{h} = \frac{\mathfrak{Im}(f(x+ih))}{h} \]
-}
+
 
 \end{frame}
 
