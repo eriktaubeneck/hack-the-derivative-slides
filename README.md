@@ -1,6 +1,6 @@
 # Hack the Derivative
 
-This is the source of a presentation given for PyData 2015. The generated slides are available [here](http://slides.skien.cc/hack-the-derivative-pydata).
+This is the source of a presentation given for PyData 2015. The generated slides are available [here](http://slides.skien.cc/hack-the-derivative-pydata.pdf).
 
 
 The functions used in this presentation are also on GitHub [here](https://github.com/eriktaubeneck/hack-the-derivative) and can be installed with `pip install hackthederivative`.
