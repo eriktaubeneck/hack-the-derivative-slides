@@ -112,12 +112,12 @@
 \author[Erik Taubeneck]{Erik Taubeneck}
 
 \institute{
-  GameChanger Media - Software Engineer and Data Maven
+  GameChanger Media - Software Engineer
 
   We're hiring! \url{https://gc.com/about/careers}
 }
 
-\date{July 25th, 2015}
+\date{August 15th, 2015}
 
 \begin{document}
 
@@ -325,6 +325,27 @@ or (possibly more readable)
 
 \frametitle{Floating Point Numbers}
 
+Multiplication is helped by Associativity and Commutativity
+
+\begin{eqnarray*}
+     && (5.916829373 \times 10^{23}) \times (7.208209342 \times 10^{-51}) \\ \pause
+  =  && 5.916829373 \times 10^{23} \times 7.208209342 \times 10^{-51} \\ \pause
+  =  && 5.916829373 \times 7.208209342 \times 10^{23} \times 10^{-51} \\ \pause
+  =  && (5.916829373 \times 7.208209342) \times (10^{23} \times 10^{-51}) \\ \pause
+\end{eqnarray*}
+
+but this doesn't work for addition \pause
+
+\begin{eqnarray*}
+      && (5.916829373 \times 10^{23}) + (7.208209342 \times 10^{-51}) \\
+\end{eqnarray*}
+
+\end{frame}
+
+\begin{frame}
+
+\frametitle{Floating Point Numbers}
+
 This means that the floating point numbers have gaps!
 
 \begin{center}
@@ -332,6 +353,8 @@ This means that the floating point numbers have gaps!
 \end{center}
 
 \end{frame}
+
+
 
 \begin{frame}[fragile]
 \frametitle{Floating Point Gaps}
@@ -704,7 +727,7 @@ Implemented in Python
   \item Follow me on twitter: \href{https://twitter.com/taubeneck}{@taubeneck}
   \item Fork me on Github: \href{https://github.com/eriktaubeneck}{eriktaubeneck}
   \item Blog: \url{http://skien.cc/}
-  \item Slides: \url{http://slides.skien.cc/hack-the-derivative-pydata.pdf}
+  \item Slides: \url{http://slides.skien.cc/hack-the-derivative-pygotham.pdf}
   \item Other Presentations: \url{http://slides.skienc.cc}
 \end{itemize}
 
