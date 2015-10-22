@@ -115,11 +115,13 @@
   \includegraphics[scale=1.0]{gamechanger.png}
 
   Software Engineer
-
-  We're hiring! \url{https://gc.com/about/careers}
 }
 
-\date{August 15th, 2015}
+\date{
+  October 20th, 2015
+
+  American University Math/Stat Dept Colloquium
+}
 
 \begin{document}
 
@@ -156,7 +158,7 @@
 \end{frame}
 
 
-\section{Calculus Crash Course}
+\section{The Derivative}
 
 \begin{frame}
 
@@ -237,8 +239,6 @@ We can estimate
 
 for some small $h$.
 
-
-
 \end{frame}
 
 \begin{frame}[fragile]
@@ -264,7 +264,29 @@ Implemented in Python
 
 But how do we choose $h$? \pause
 
-The limit as $h \to 0$ approaches the derivative, so the smaller the better!
+\begin{eqnarray*} f(x + h) && = f(x) + \sum_{n = 1}^{\infty} \frac{f^{(n)}(x)}{n!}h^n \\ && = f(x) + f'(x)h + \sum_{n = 2}^{\infty} \frac{f^{(n)}(x)}{n!}h^n \end{eqnarray*}
+
+where $f^{(n)}$ is the $n^{th}$ derivative of $f$.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Finite Difference}
+
+Solving for $f'$, we get
+
+\begin{eqnarray*} f'(x) && = \frac{f(x+h) - f(x)}{h} - \sum_{n = 1}^{\infty} \frac{f^{(n)}(x)}{n!}h^{(n-1)} \\ \end{eqnarray*}
+
+and thus the error of such approximation is
+
+\begin{eqnarray*} \mathcal{E}(h, x) = \sum_{n = 1}^{\infty} \frac{f^{(n)}(x)}{n!}h^{(n-1)}. \end{eqnarray*}
+
+Generally, we only care about magnitude of the error, $\left \vert \mathcal{E}(h,x) \right \vert$. Since we are estimating derivative at the specific value $x = x_0$, the absolute error is completely a function of $h$. $\left \vert \mathcal{E}(h, x_0) \right \vert$ is a strictly monotonically increasing function (i.e. it decreases as $h \to 0$).
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Finite Difference}
 
 \begin{lstlisting}
   In [4]: import sys
@@ -302,11 +324,48 @@ To figure out why, let's look closer at Floating Point numbers.
 
 \end{frame}
 
-\section{Floating Point Arithmetic}
 
+\section{Floating Point Arithmetic}
 
 \begin{frame}
 
+\frametitle{64 bits}
+
+A 64-bit computer can do exact operations on the integers modulo 18,446,744,073,709,551,616 ($2^{64}$). \linebreak[2]
+
+Unsigned: $\{z \in \mathbb{Z} \mid 0 <= z < 2^{64}-1 \}$ \linebreak[2]
+
+Signed: $\{z \in \mathbb{Z} \mid -2^{63} <= z <= 2^{63}-1 \}$
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+\frametitle{Floating Point Numbers}
+
+\begin{lstlisting}
+  In [1]: import sys
+
+  In [2]: sys.float_info.max
+  Out [2]: 1.7976931348623157e+308
+
+  In [3]: sys.float_info.min
+  Out [3]: 2.2250738585072014e-308
+
+\end{lstlisting}
+
+\pause
+
+For comparison:
+
+\begin{itemize}[<+->]
+  \item There are an estimated $10^{78}$ to $10^{82}$ atoms in the visible universe.
+  \item Given a lottery that you played every millisecond from the Big Bang to now, if you were only expected to win once, the probability of winning would be $~4*10^{-20}$.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
 \frametitle{Floating Point Numbers}
 
 A Float64, or a double-precision floating-point number, consists of
@@ -327,6 +386,17 @@ or (possibly more readable)
 
 \frametitle{Floating Point Numbers}
 
+The floating point numbers have non-constant gaps!
+
+\begin{center}
+\includegraphics[scale=.6]{float-gaps.jpg}
+\end{center}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Floating Point Numbers}
+
 Multiplication is helped by Associativity and Commutativity
 
 \begin{eqnarray*}
@@ -343,20 +413,6 @@ but this doesn't work for addition \pause
 \end{eqnarray*}
 
 \end{frame}
-
-\begin{frame}
-
-\frametitle{Floating Point Numbers}
-
-This means that the floating point numbers have gaps!
-
-\begin{center}
-\includegraphics[scale=.6]{float-gaps.jpg}
-\end{center}
-
-\end{frame}
-
-
 
 \begin{frame}[fragile]
 \frametitle{Floating Point Gaps}
@@ -397,9 +453,23 @@ then
 
 \end{frame}
 
+\begin{frame}
+\frametitle{Problems with the Derivative}
+
+Similarly, if
+
+\[ float(f(x+h)) = float(f(x))  \]
+\pause
+
+then
+
+\[ \frac{f(x+h) - f(x)}{h} = \frac{0}{h} = 0 \]
+
+\end{frame}
+
 
 \begin{frame}[fragile]
-\frametitle{Choosing Epsilon}
+\frametitle{Measuring the Gaps}
 
 \begin{lstlisting}
 
@@ -412,12 +482,12 @@ then
   |\pause|
   In [2]: eps(1.0)
   Out[2]: 2.220446049250313e-16
-
-  In [3]: eps(1.0e10)
-  Out[3]: 1.1102230246251565e-06
   |\pause|
-  In [4]: eps(1.0e20)
-  Out[4]: 11102.230246251565
+  In [3]: eps(1.0e13)
+  Out[3]: 0.0011102230246251565
+  |\pause|
+  In [4]: eps(1.0e19)
+  Out[4]: 1110.2230246251565
 \end{lstlisting}
 
 \end{frame}
@@ -425,7 +495,21 @@ then
 \begin{frame}[fragile]
 \frametitle{Choosing Epsilon}
 
-From \href{http://www.karenkopecky.net/Teaching/eco613614/Notes_NumericalDifferentiation.pdf}{lecture notes posted by Karen Kopecky} \footnote{\url{http://www.karenkopecky.net/Teaching/eco613614/Notes_NumericalDifferentiation.pdf}}, we see we should use
+Going back to our error estimation,
+
+\begin{eqnarray*} \mathcal{E}(h, x) = \sum_{n = 1}^{\infty} \frac{f^{(n)}(x)}{n!}h^{(n-1)} \end{eqnarray*}
+
+we can add in a term, $R(f, x, h)$ which accounts for the rounding error. The total error then becomes
+
+\begin{eqnarray*} \mathcal{E}(h, x) = \sum_{n = 1}^{\infty} \frac{f^{(n)}(x)}{n!}h^{(n-1)} + R(f, x, h) \end{eqnarray*}
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Choosing Epsilon}
+
+
+It turns out that a good estimate \footnote{\url{http://www.karenkopecky.net/Teaching/eco613614/Notes_NumericalDifferentiation.pdf}} is
 
 \[ h = \sqrt{u} * max(\abs{x}, 1) \]
 
@@ -486,14 +570,9 @@ where $u = eps(1)$.
   Out[12]: 0.9999999999998509
 \end{lstlisting}
 
-\end{frame}
-
-\begin{frame}
-\frametitle{We Can Do Better!}
 \pause
-\begin{center}
-  \includegraphics[scale=0.5]{use-math.png}
-\end{center}
+
+We can do better \pause using Complex Analyis.
 
 \end{frame}
 
@@ -507,7 +586,6 @@ where $u = eps(1)$.
   \item Why do we need $i$???
   \item Solve $x^2 + 1 = 0$
   \item Def: $\C = \{x + iy \ \forall \ x,y \ \in \R^2 \}$
-  \item Fun fact! All polynomials of degree $n$ have $n$ zeros in $\C$.
 \end{itemize}
 
 
@@ -524,7 +602,8 @@ Let $z=x+iy$. Then
 \[ x^2+ 2ixy - y^2 \]
 
 \pause
-We can always write $f(x+iy) = u(x,y) + iv(x,y)$. Note that
+
+We define
 
 \[ u(x,y) = \mathfrak{R}(f(x+iy)) \ \mathrm{and} \ v(x,y) = \mathfrak{I}(f(x+iy)) \]
 
@@ -557,35 +636,39 @@ We can now take 4 different derivatives.
 
 \begin{frame}
 \frametitle{Cauchy-Riemann Equations}
-  These are the Cauchy-Riemann equations and hold for all analytic functions on $\C$! \footnote{See your favorite Complex Analysis textbook for a proof.}
+  These are the Cauchy-Riemann equations and hold for all analytic functions on $\C$! \footnote{See your favorite Complex Analysis textbook or Dr. Casey for a proof.}
   \begin{eqnarray*}
   \frac{\partial u}{\partial x} = \frac{\partial v}{\partial y} &&
   \frac{\partial u}{\partial y} = -\frac{\partial v}{\partial x}
   \end{eqnarray*}
 
-
-
 \end{frame}
-
 
 \section{Hack the Derivative}
 \begin{frame}
 \frametitle{Time for the Hack!}
 
-  We have $f:\R \to X \subseteq \R$. Rewrite
+  Given $f: \C \to \C$ such that $f:\R \to X \subseteq \R$, we can rewrite
   \[ f(z) = f(x+iy) = u(x,y) + iv(x,y) \]
   \pause
   Now, for all $\bar{z} \in \R$, we have $y = 0$, and so
   \[ f(\bar{z}) = f(x,0) = u(x,0) + iv(x,0) \]
-  \pause
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Time for the Hack!}
+
   Since $f: \R \to X \subseteq \R$, $f(\bar{z}) \in \R$ for all $\bar{z} \in \R$. Therefore
   \[ v(x,0) = 0 \]
   \pause
   and so
-  \[ f(x,0) = u(x,0) \]
+  \[ f(\bar{z}) = f(x,0) = u(x,0) + iv(x,0) = u(x,0) \]
   \pause
   We want to estimate $\frac{df}{\partial x}$. Since for all $z \in \R$, $f = u$,
   \[ \frac{df}{\partial x} = \frac{\partial u}{\partial x} = \frac{\partial v}{\partial y} \]
+
+  by the Cauchy-Riemann equations.
 
 \end{frame}
 
@@ -597,15 +680,37 @@ We can now take 4 different derivatives.
   \pause
   Since $y = 0$ for all $\bar{z} \in \R$,
   \[ \frac{\partial v}{\partial y} = \lim_{h \to 0} \frac{v(x,h) - v(x,0)}{h} \]
-  \pause
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Time for the Hack!}
+
   Recall that $v(x,0) = 0$, so
   \[ \frac{\partial v}{\partial y} = \lim_{h \to 0} \frac{v(x,h)}{h} \]
   \pause
   Now, to estimate $\frac{df}{\partial x} = \frac{\partial v}{\partial y}$, for a very small $h$
-  \[ \frac{df}{\partial x} \approx \frac{v(x,h)}{h} = \frac{\mathfrak{Im}(f(x+ih))}{h} \]
+  \[ \frac{df}{\partial x} \approx \frac{v(x,h)}{h} = \frac{\mathfrak{I}(f(x+ih))}{h} \]
 
 
 \end{frame}
+
+\begin{frame}
+\frametitle{Time for the Hack!}
+
+  We've now replaced
+
+  \[ \frac{f(x+h) - f(x)}{h} \]
+
+  with
+
+  \[ \frac{\mathfrak{I}(f(x+ih))}{h}. \]
+
+  Note that we have eliminated the floating point addition!
+
+
+\end{frame}
+
 
 \begin{frame}[fragile]
 \frametitle{Complex Step Finite Difference}
@@ -722,6 +827,19 @@ Implemented in Python
 \end{frame}
 
 \begin{frame}
+\frametitle{Other Approaches}
+
+    Automatic Differentiation
+
+    \begin{itemize}
+      \item All computer programs perform a sequence of elementary arithmetic
+      \item Using the chain rule repeatedly, derivative of arbitrary order can be computed
+    \end{itemize}
+
+\end{frame}
+
+
+\begin{frame}
 
 \frametitle{Thanks!}
 
@@ -729,7 +847,8 @@ Implemented in Python
   \item Follow me on twitter: \href{https://twitter.com/taubeneck}{@taubeneck}
   \item Fork me on Github: \href{https://github.com/eriktaubeneck}{eriktaubeneck}
   \item Blog: \url{http://skien.cc/}
-  \item Slides: \url{http://slides.skien.cc/hack-the-derivative-pygotham.pdf}
+  \item Slides: \url{http://slides.skien.cc/hack-the-derivative-au.pdf}
+  \item Long Form Article in Code Words: \url{https://codewords.recurse.com/issues/four/hack-the-derivative}
   \item Other Presentations: \url{http://slides.skienc.cc}
 \end{itemize}
 
