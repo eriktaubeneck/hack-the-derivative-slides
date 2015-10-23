@@ -279,9 +279,12 @@ Solving for $f'$, we get
 
 and thus the error of such approximation is
 
-\begin{eqnarray*} \mathcal{E}(h, x) = \sum_{n = 1}^{\infty} \frac{f^{(n)}(x)}{n!}h^{(n-1)}. \end{eqnarray*}
+\begin{eqnarray*}
+\mathcal{E}(h, x) = \sum_{n = 1}^{\infty} \frac{f^{(n)}(x)}{n!}h^{(n-1)} \\
+\left \vert \mathcal{E}(h, x_0) \right \vert \le \sum_{n = 1}^{\infty} \left \vert \frac{f^{(n)}(x)}{n!} \right \vert \left \vert h^{(n-1)} \right \vert
+\end{eqnarray*}
 
-Generally, we only care about magnitude of the error, $\left \vert \mathcal{E}(h,x) \right \vert$. Since we are estimating derivative at the specific value $x = x_0$, the absolute error is completely a function of $h$. $\left \vert \mathcal{E}(h, x_0) \right \vert$ is a strictly monotonically increasing function (i.e. it decreases as $h \to 0$).
+The right hand side is a strictly monotonically increasing function with value $0$ when $h=0$, so the limit of $\lim_{h \to 0} \left \vert \mathcal{E}(h, x_n) \right \vert = 0$.
 
 \end{frame}
 
